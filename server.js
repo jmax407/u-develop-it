@@ -1,3 +1,4 @@
+const inputCheck = require('./utils/inputCheck');
 const sqlite3 = require('sqlite3').verbose();
 const express = require('express');
 
@@ -64,7 +65,14 @@ app.delete('/api/candidate/:id', (req, res) => {
       });
     });
   });
-  
+// Create a candidate
+app.post('/api/candidate', ({ body }, res) => {
+    const errors = inputCheck(body, 'first_name', 'last_name', 'industry_connected');
+    if (errors) {
+      res.status(400).json({ error: errors });
+      return;
+    }
+  });
 // Default response for any other requests(Not Found) Catch all
 app.use((req, res) => {
   res.status(404).end();
